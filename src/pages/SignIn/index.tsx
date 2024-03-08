@@ -5,7 +5,7 @@ import Input from "../../components/Input";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Container, Wrapper } from "./styles";
 import { Button } from "../../components/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface ISignIn {
   email: string;
@@ -57,6 +57,8 @@ const SignIn = () => {
             error={errors.password?.message}
           />
           <Button type="submit">Enviar</Button>
+          <span>Ainda não possui uma conta?</span>&nbsp;
+          <Link to={"/signup"}>Cadastre-se</Link>
         </form>
       </Wrapper>
     </Container>
