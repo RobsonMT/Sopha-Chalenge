@@ -43,7 +43,7 @@ export const InputContainer = styled.div<IProps>`
 
   input {
     color: ${({ variation }) => variation === "default" && "var(--grey)"};
-    color: ${({ variation }) => variation === "focus" && "var(--purple)"};
+    color: ${({ variation }) => variation === "focus" && "var(--blue)"};
     color: ${({ variation }) => variation === "filled" && "var(--green)"};
     color: ${({ variation }) => variation === "error" && "var(--red)"};
 

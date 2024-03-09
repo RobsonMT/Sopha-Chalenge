@@ -9,10 +9,11 @@ interface ButtonProps extends MuiButtonProps {
   children: ReactNode;
 }
 
-const ButtonBase: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = ({
-  children,
-  ...rest
-}) => (
+const ButtonBase: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
+  { children, ...rest },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ref
+) => (
   <Container>
     <MuiButton {...rest} variant="outlined" fullWidth>
       {children}

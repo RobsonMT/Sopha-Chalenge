@@ -4,16 +4,13 @@ import * as yup from "yup";
 import Input from "../../components/Input";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Container, Wrapper } from "./styles";
+import { Link } from "react-router-dom";
+import { ISignIn } from "../../interfaces";
 import { Button } from "../../components/Button";
-import { Link, useNavigate } from "react-router-dom";
-
-export interface ISignIn {
-  email: string;
-  password: string;
-}
+import { useAuth } from "../../providers/hooks";
 
 const SignIn = () => {
-  const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   const schema = yup.object().shape({
     email: yup.string().email("Email inválido").required("Campo obrigatório"),
@@ -31,8 +28,10 @@ const SignIn = () => {
 
   const onSubmitFunc = (data: ISignIn) => {
     console.log(data);
-    reset();
-    navigate("/dashboard");
+
+    signIn(data).then(() => {
+      reset();
+    });
   };
 
   return (

@@ -5,16 +5,12 @@ import Input from "../../components/Input";
 import { FaEnvelope, FaLock, FaUserAlt } from "react-icons/fa";
 import { Container, Wrapper } from "./styles";
 import { Button } from "../../components/Button";
-import { Link, useNavigate } from "react-router-dom";
-
-export interface ISignup {
-  name: string;
-  email: string;
-  password: string;
-}
+import { Link } from "react-router-dom";
+import { ISignup } from "../../interfaces";
+import { useAuth } from "../../providers/hooks";
 
 const Signup = () => {
-  const navigate = useNavigate();
+  const { signUp } = useAuth();
 
   const schema = yup.object().shape({
     name: yup.string().required("Campo obrigatório"),
@@ -33,8 +29,10 @@ const Signup = () => {
 
   const onSubmitFunc = (data: ISignup) => {
     console.log(data);
-    reset();
-    navigate("/");
+
+    signUp(data).then(() => {
+      reset();
+    });
   };
 
   return (
