@@ -2,14 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
-import AppProviders from "./providers/index.tsx";
+import { AppProvider } from "./contexts/index.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AppProviders>
+      <AppProvider>
         <App />
-      </AppProviders>
+      </AppProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
