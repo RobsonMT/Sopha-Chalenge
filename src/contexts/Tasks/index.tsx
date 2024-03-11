@@ -6,24 +6,27 @@ import {
   useState,
 } from "react";
 import { api } from "../../services/api";
-import { ITask } from "../../interfaces";
+import { ITask, IUpdateTask } from "../../interfaces";
 
 interface ITaskProviderProps {
   children: ReactNode;
 }
 
-// type TPriority = "baixa" | "média" | "alta";
-
 interface ITaskContextData {
   tasks: ITask[];
   createTask(data: Omit<ITask, "id">, accessToken: string): Promise<void>;
-  loadTasks(userId: string, accessToken: string): Promise<void>;
-  deleteTask(taskId: string, accessToken: string): Promise<void>;
-  updateTask(
-    taskId: string,
-    userId: string,
+  loadTasks(userId: number, accessToken: string): Promise<void>;
+  completeTask(
+    taskId: number,
+    userId: number,
     accessToken: string
   ): Promise<void>;
+  updateTask(
+    taskId: number,
+    data: IUpdateTask,
+    accessToken: string
+  ): Promise<void>;
+  deleteTask(taskId: number, accessToken: string): Promise<void>;
 }
 
 const TaskContext = createContext({} as ITaskContextData);
@@ -58,7 +61,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
     []
   );
 
-  const loadTasks = useCallback(async (userId: string, accessToken: string) => {
+  const loadTasks = useCallback(async (userId: number, accessToken: string) => {
     try {
       const response = await api.get(`/tasks?userId=${userId}`, {
         headers: {
@@ -72,17 +75,28 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
     }
   }, []);
 
-  const deleteTask = useCallback(
-    async (taskId: string, accessToken: string) => {
+  const updateTask = useCallback(
+    async (taskId: number, data: IUpdateTask, accessToken: string) => {
       try {
-        await api.delete(`/tasks/${taskId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+        await api.patch(
+          `/tasks/${taskId}`,
+          {
+            ...data,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         const filteredTasks = tasks.filter((task) => task.id !== taskId);
-        setTasks(filteredTasks);
+        const task = tasks.find((task) => task.id === taskId);
+
+        if (task) {
+          Object.assign(task, data);
+          setTasks([...filteredTasks, task]);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -90,8 +104,8 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
     [tasks]
   );
 
-  const updateTask = useCallback(
-    async (taskId: string, userId: string, accessToken: string) => {
+  const completeTask = useCallback(
+    async (taskId: number, userId: number, accessToken: string) => {
       try {
         await api.patch(
           `/tasks/${taskId}`,
@@ -120,9 +134,34 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
     [tasks]
   );
 
+  const deleteTask = useCallback(
+    async (taskId: number, accessToken: string) => {
+      try {
+        await api.delete(`/tasks/${taskId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const filteredTasks = tasks.filter((task) => task.id !== taskId);
+        setTasks(filteredTasks);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [tasks]
+  );
+
   return (
     <TaskContext.Provider
-      value={{ tasks, createTask, loadTasks, deleteTask, updateTask }}
+      value={{
+        tasks,
+        createTask,
+        loadTasks,
+        completeTask,
+        updateTask,
+        deleteTask,
+      }}
     >
       {children}
     </TaskContext.Provider>

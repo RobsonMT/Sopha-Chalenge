@@ -1,6 +1,6 @@
 import { Center, theme } from "@chakra-ui/react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 interface IGoBackButtonProps {
   top: string;
@@ -8,7 +8,7 @@ interface IGoBackButtonProps {
 }
 
 export const GoBackButton = ({ top, left }: IGoBackButtonProps) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   return (
     <Center
@@ -24,7 +24,7 @@ export const GoBackButton = ({ top, left }: IGoBackButtonProps) => {
       _hover={{
         bg: "purple.600",
       }}
-      onClick={() => navigate("/")}
+      onClick={() => history.push("/")}
     >
       <FaArrowLeft color={theme.colors.white} />
     </Center>

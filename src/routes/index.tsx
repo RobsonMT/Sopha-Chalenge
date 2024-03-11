@@ -1,16 +1,17 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Switch, useLocation } from "react-router-dom";
 import { Dashboard } from "../pages/Dashboard";
 import { Signin } from "../pages/Signin";
 import { Signup } from "../pages/Signup";
+import { Route } from "./Route";
 
 export const AppRoutes = () => {
   const location = useLocation();
 
   return (
-    <Routes key={location.pathname} location={location}>
-      <Route path="/" element={<Signin />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-    </Routes>
+    <Switch key={location.pathname} location={location}>
+      <Route exact path="/" component={Signin} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/dashboard" component={Dashboard} isPrivate />
+    </Switch>
   );
 };

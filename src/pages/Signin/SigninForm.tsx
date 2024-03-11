@@ -2,28 +2,24 @@ import { Button, Grid, Heading, Text, VStack } from "@chakra-ui/react";
 import { DeepMap, FieldError, UseFormRegister } from "react-hook-form";
 import { FieldValues } from "react-hook-form";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { Input } from "../../components/Form/input";
+import { useHistory } from "react-router-dom";
+import { Input } from "../../components/Form/Input";
+import { ISignInData } from "../../interfaces";
 
-interface ISignInData {
-  email: string;
-  password: string;
-}
-
-interface ILoginFormProps {
+interface ISiginFormProps {
   handleSignIn: () => void;
   errors: DeepMap<FieldValues, FieldError>;
   register: UseFormRegister<ISignInData>;
   loading: boolean;
 }
 
-export const LoginForm = ({
+export const SiginForm = ({
   handleSignIn,
   errors,
   register,
   loading,
-}: ILoginFormProps) => {
-  const navigate = useNavigate();
+}: ISiginFormProps) => {
+  const history = useHistory();
 
   return (
     <Grid
@@ -81,7 +77,7 @@ export const LoginForm = ({
           color="gray.300"
           h="50px"
           borderRadius="8px"
-          onClick={() => navigate("/signup")}
+          onClick={() => history.push("/signup")}
           _hover={{
             background: "gray.200",
           }}

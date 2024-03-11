@@ -2,7 +2,7 @@ import { Button, Grid, Heading, VStack } from "@chakra-ui/react";
 import { DeepMap, FieldError, UseFormRegister } from "react-hook-form";
 import { FieldValues } from "react-hook-form";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import { Input } from "../../components/Form/input";
+import { Input } from "../../components/Form/Input";
 
 interface ISignUpData {
   name: string;

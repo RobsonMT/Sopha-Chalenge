@@ -1,9 +1,14 @@
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../contexts/Auth";
-import { IUser } from "../../interfaces";
+import { ISignInData } from "../../interfaces";
+import { Flex, useDisclosure } from "@chakra-ui/react";
+import { SigninInfo } from "./signinInfo";
+import { SiginForm } from "./SigninForm";
+import { useHistory } from "react-router-dom";
+import { ModalError } from "../../components/Modal/ModalError";
 
 const signInSchema = yup.object().shape({
   email: yup
@@ -15,6 +20,7 @@ const signInSchema = yup.object().shape({
 
 export const Signin = () => {
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const { signIn } = useAuth();
 
@@ -22,45 +28,69 @@ export const Signin = () => {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm: ({
+    reset,
+  } = useForm<ISignInData>({
     resolver: yupResolver(signInSchema),
   });
 
-  const handleSignIn = (data: Omit<IUser, "id" | "name">) => {
+  const {
+    isOpen: isModalErrorOpen,
+    onOpen: onModalErrorOpen,
+    onClose: onModalErrorClose,
+  } = useDisclosure();
+
+  const handleSignIn = async (data: ISignInData) => {
     setLoading(true);
-    signIn(data).then(() => setLoading(false))
-      .catch(() => setLoading(false));
-    }
+
+    await signIn(data)
+      .then(() => {
+        setLoading(false);
+        reset;
+        history.push("/dashboard");
+      })
+      .catch(() => {
+        setLoading(false);
+        reset();
+        onModalErrorOpen();
+      });
   };
 
   return (
-    <Flex
-      padding={["10px 15px", "10px 15px", "0px", "0px"]}
-      alignItems="center"
-      justifyContent="center"
-      height={["auto", "auto", "100vh", "100vh"]}
-      bgGradient={[
-        "linear(to-b, purple.800 65%, white 35%)",
-        "linear(to-b, purple.800 65%, white 35%)",
-        "linear(to-r, purple.800 70%, white 30%)",
-        "linear(to-r, purple.800 70%, white 30%)",
-      ]}
-      color="white"
-    >
+    <React.Fragment>
+      <ModalError
+        isOpen={isModalErrorOpen}
+        onClose={onModalErrorClose}
+        error="Dados Inválidos."
+        secondaryText="Você pode tentar novamente, <b>clicando</b> no botão acima ou aguarde alguns minutos..."
+      />
       <Flex
-        w={["100%", "100%", "100%", "80%"]}
-        justifyContent="center"
-        flexDirection={["column", "column", "row", "row"]}
+        padding={["10px 15px", "10px 15px", "0px", "0px"]}
         alignItems="center"
+        justifyContent="center"
+        height={["auto", "auto", "100vh", "100vh"]}
+        bgGradient={[
+          "linear(to-b, purple.800 65%, white 35%)",
+          "linear(to-b, purple.800 65%, white 35%)",
+          "linear(to-r, purple.800 70%, white 30%)",
+          "linear(to-r, purple.800 70%, white 30%)",
+        ]}
+        color="white"
       >
-        <LoginInfo />
-        <LoginForm
-          errors={errors}
-          handleSignIn={handleSubmit(handleSignIn)}
-          loading={loading}
-          register={register}
-        />
+        <Flex
+          w={["100%", "100%", "100%", "80%"]}
+          justifyContent="center"
+          flexDirection={["column", "column", "row", "row"]}
+          alignItems="center"
+        >
+          <SigninInfo />
+          <SiginForm
+            errors={errors}
+            handleSignIn={handleSubmit(handleSignIn)}
+            loading={loading}
+            register={register}
+          />
+        </Flex>
       </Flex>
-    </Flex>
+    </React.Fragment>
   );
 };

@@ -6,7 +6,8 @@ import {
   useState,
 } from "react";
 import { api } from "../../services/api";
-import { IUser } from "../../interfaces";
+import { ISignInData, ISignUpData, IUser } from "../../interfaces";
+import { useHistory } from "react-router-dom";
 
 interface IAuthProviderProps {
   children: ReactNode;
@@ -20,8 +21,9 @@ interface IAuthState {
 interface IAuthContextData {
   user: IUser;
   accessToken: string;
-  signUp(data: Omit<IUser, "id">): void;
-  signIn(data: Omit<IUser, "id" | "name">): Promise<void>;
+  isAuthenticated: boolean;
+  signIn(data: ISignInData): Promise<void>;
+  signUp(data: ISignUpData): Promise<void>;
   signOut(): void;
 }
 
@@ -38,44 +40,40 @@ const useAuth = () => {
 };
 
 const AuthProvider = ({ children }: IAuthProviderProps) => {
-  const [data, setData] = useState<IAuthState>(() => {
-    const accessToken = localStorage.getItem("@SophaChalenge:accessToken");
-    const user = localStorage.getItem("@SophaChalenge:user");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const history = useHistory();
 
-    if (accessToken && user) {
-      return { accessToken, user: JSON.parse(user) };
+  const [data, setData] = useState<IAuthState>(() => {
+    if (isAuthenticated) {
+      const accessToken = localStorage.getItem("@SophaChalenge:accessToken");
+      const user = localStorage.getItem("@SophaChalenge:user");
+
+      if (accessToken && user) {
+        return { accessToken, user: JSON.parse(user) };
+      }
     }
 
     return {} as IAuthState;
   });
 
-  const signIn = useCallback(async (data: Omit<IUser, "id" | "name">) => {
-    try {
-      const { email, password } = data;
+  const signIn = useCallback(async (data: ISignInData) => {
+    const { email, password } = data;
 
-      const response = await api.post("/login", { email, password });
+    const response = await api.post("/login", { email, password });
 
-      const { accessToken, user } = response.data;
+    const { accessToken, user } = response.data;
 
-      localStorage.setItem("@SophaChalenge:accessToken", accessToken);
-      localStorage.setItem("@SophaChalenge:user", JSON.stringify(user));
+    localStorage.setItem("@SophaChalenge:accessToken", accessToken);
+    localStorage.setItem("@SophaChalenge:user", JSON.stringify(user));
 
-      setData({ accessToken, user });
-    } catch (error) {
-      console.log(error);
-    }
+    setData({ accessToken, user });
+    setIsAuthenticated(true);
   }, []);
 
-  const signUp = useCallback(async (data: Omit<IUser, "id">) => {
-    try {
-      const { name, email, password } = data;
+  const signUp = useCallback(async (data: ISignUpData) => {
+    const { name, email, password } = data;
 
-      const response = await api.post("/signup", { name, email, password });
-
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
+    await api.post("/signup", { name, email, password });
   }, []);
 
   const signOut = useCallback(() => {
@@ -83,13 +81,16 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
     localStorage.removeItem("@SophaChalenge:user");
 
     setData({} as IAuthState);
-  }, []);
+    setIsAuthenticated(false);
+    history.push("/");
+  }, [history]);
 
   return (
     <AuthContext.Provider
       value={{
         accessToken: data.accessToken,
         user: data.user,
+        isAuthenticated,
         signUp,
         signIn,
         signOut,

@@ -1,7 +1,7 @@
 import { Grid, Heading, Image, Text } from "@chakra-ui/react";
 import LogoSecondary from "../../assets/logo-secondary.svg";
 
-export const LoginInfo = () => (
+export const SigninInfo = () => (
   <Grid w={["100%", "100%", "50%", "50%"]} paddingRight="100px">
     <Image
       src={LogoSecondary}
