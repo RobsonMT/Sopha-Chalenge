@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ISignUpData } from "../../interfaces";
-import { api } from "../../services/api";
 import { ModalSuccess } from "../../components/Modal/ModalSuccess";
 import { ModalError } from "../../components/Modal/ModalError";
 import { GoBackButton } from "./GoBackButton";
