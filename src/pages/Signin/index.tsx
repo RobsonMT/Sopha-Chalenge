@@ -9,6 +9,7 @@ import { SigninInfo } from "./signinInfo";
 import { SiginForm } from "./SigninForm";
 import { useHistory } from "react-router-dom";
 import { ModalError } from "../../components/Modal/ModalError";
+import { MotionContainer } from "../../components/MotionContainer";
 
 const signInSchema = yup.object().shape({
   email: yup
@@ -56,41 +57,43 @@ export const Signin = () => {
   };
 
   return (
-    <React.Fragment>
-      <ModalError
-        isOpen={isModalErrorOpen}
-        onClose={onModalErrorClose}
-        error="Dados Inválidos."
-        secondaryText="Você pode tentar novamente, <b>clicando</b> no botão acima ou aguarde alguns minutos..."
-      />
-      <Flex
-        padding={["10px 15px", "10px 15px", "0px", "0px"]}
-        alignItems="center"
-        justifyContent="center"
-        height={["auto", "auto", "100vh", "100vh"]}
-        bgGradient={[
-          "linear(to-b, purple.800 65%, white 35%)",
-          "linear(to-b, purple.800 65%, white 35%)",
-          "linear(to-r, purple.800 70%, white 30%)",
-          "linear(to-r, purple.800 70%, white 30%)",
-        ]}
-        color="white"
-      >
+    <MotionContainer>
+      <React.Fragment>
+        <ModalError
+          isOpen={isModalErrorOpen}
+          onClose={onModalErrorClose}
+          error="Dados Inválidos."
+          secondaryText="Você pode tentar novamente, <b>clicando</b> no botão acima ou aguarde alguns minutos..."
+        />
         <Flex
-          w={["100%", "100%", "100%", "80%"]}
-          justifyContent="center"
-          flexDirection={["column", "column", "row", "row"]}
+          padding={["10px 15px", "10px 15px", "0px", "0px"]}
           alignItems="center"
+          justifyContent="center"
+          height={["auto", "auto", "100vh", "100vh"]}
+          bgGradient={[
+            "linear(to-b, purple.800 65%, white 35%)",
+            "linear(to-b, purple.800 65%, white 35%)",
+            "linear(to-r, purple.800 70%, white 30%)",
+            "linear(to-r, purple.800 70%, white 30%)",
+          ]}
+          color="white"
         >
-          <SigninInfo />
-          <SiginForm
-            errors={errors}
-            handleSignIn={handleSubmit(handleSignIn)}
-            loading={loading}
-            register={register}
-          />
+          <Flex
+            w={["100%", "100%", "100%", "80%"]}
+            justifyContent="center"
+            flexDirection={["column", "column", "row", "row"]}
+            alignItems="center"
+          >
+            <SigninInfo />
+            <SiginForm
+              errors={errors}
+              handleSignIn={handleSubmit(handleSignIn)}
+              loading={loading}
+              register={register}
+            />
+          </Flex>
         </Flex>
-      </Flex>
-    </React.Fragment>
+      </React.Fragment>
+    </MotionContainer>
   );
 };

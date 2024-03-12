@@ -6,6 +6,7 @@ import { Card } from "../../components/Card";
 import { SearchBox } from "../../components/Form/SearchBox";
 import { Header } from "../../components/Header";
 import { ITask } from "../../interfaces";
+import { MotionContainer } from "../../components/MotionContainer";
 
 export const Dashboard = () => {
   const [filteredData, setFilteredData] = useState<ITask[]>([]);
@@ -56,31 +57,33 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <Box>
-      <Header />
-      <SearchBox filterData={filterData} />
-      <Grid
-        w="100%"
-        templateColumns="repeat(auto-fill, minmax(320px , 1fr))"
-        gap="10"
-        placeContent="center"
-        padding="8"
-        mt="8"
-      >
-        {filteredData.length > 0 ? (
-          <React.Fragment>
-            {filteredData.map((task) => (
-              <Card key={task.id} task={task} />
-            ))}
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            {tasks.map((task) => (
-              <Card key={task.id} task={task} />
-            ))}
-          </React.Fragment>
-        )}
-      </Grid>
-    </Box>
+    <MotionContainer>
+      <Box>
+        <Header />
+        <SearchBox filterData={filterData} />
+        <Grid
+          w="100%"
+          templateColumns="repeat(auto-fill, minmax(320px , 1fr))"
+          gap="10"
+          placeContent="center"
+          padding="8"
+          mt="8"
+        >
+          {filteredData.length > 0 ? (
+            <React.Fragment>
+              {filteredData.map((task) => (
+                <Card key={task.id} task={task} />
+              ))}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              {tasks.map((task) => (
+                <Card key={task.id} task={task} />
+              ))}
+            </React.Fragment>
+          )}
+        </Grid>
+      </Box>
+    </MotionContainer>
   );
 };

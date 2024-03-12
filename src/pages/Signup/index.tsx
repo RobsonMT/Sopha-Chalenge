@@ -11,6 +11,7 @@ import { GoBackButton } from "./GoBackButton";
 import { SignupForm } from "./SignupForm";
 import { SignupInfo } from "./SignupInfo";
 import { useAuth } from "../../contexts/Auth";
+import { MotionContainer } from "../../components/MotionContainer";
 
 const signUpSchema = yup.object().shape({
   name: yup.string().required("Nome obrigatório"),
@@ -72,64 +73,66 @@ export const Signup = () => {
   });
 
   return (
-    <React.Fragment>
-      <ModalSuccess
-        isOpen={isModalSuccessOpen}
-        onClose={onModalSuccessClose}
-        onClick={() => history.push("/")}
-        buttonMessage="Ir para o login agora"
-        message="Seu cadastro deu super certo, <b>vamos lá</b>"
-        secondaryText="Você já pode começar criando <b>suas listas</b> de tarefas agora mesmo..."
-      />
-      <ModalError
-        error="Email já cadastrado."
-        isOpen={isModalErrorOpen}
-        onClose={onModalErrorClose}
-        secondaryText="Você pode tentar novamente, <b>clicando</b> no botão acima ou aguarde alguns minutos..."
-      />
-      <Flex
-        padding={["10px 15px", "10 15px", "0px", "0px"]}
-        alignItems="center"
-        justifyContent="center"
-        height={["auto", "auto", "100vh", "100vh"]}
-        bgGradient={[
-          "linear(to-b, purple.800 65%, white 35%)",
-          "linear(to-b, purple.800 65%, white 35%)",
-          "linear(to-l, purple.800 65%, white 35%)",
-          "linear(to-l, purple.800 65%, white 35%)",
-        ]}
-        color="white"
-      >
+    <MotionContainer>
+      <React.Fragment>
+        <ModalSuccess
+          isOpen={isModalSuccessOpen}
+          onClose={onModalSuccessClose}
+          onClick={() => history.push("/")}
+          buttonMessage="Ir para o login agora"
+          message="Seu cadastro deu super certo, <b>vamos lá</b>"
+          secondaryText="Você já pode começar criando <b>suas listas</b> de tarefas agora mesmo..."
+        />
+        <ModalError
+          error="Email já cadastrado."
+          isOpen={isModalErrorOpen}
+          onClose={onModalErrorClose}
+          secondaryText="Você pode tentar novamente, <b>clicando</b> no botão acima ou aguarde alguns minutos..."
+        />
         <Flex
-          w={["100%", "100%", "90%", "65%"]}
+          padding={["10px 15px", "10 15px", "0px", "0px"]}
+          alignItems="center"
           justifyContent="center"
-          flexDirection={["column", "column", "row", "row"]}
+          height={["auto", "auto", "100vh", "100vh"]}
+          bgGradient={[
+            "linear(to-b, purple.800 65%, white 35%)",
+            "linear(to-b, purple.800 65%, white 35%)",
+            "linear(to-l, purple.800 65%, white 35%)",
+            "linear(to-l, purple.800 65%, white 35%)",
+          ]}
+          color="white"
         >
-          {isWideVersion ? (
-            <>
-              <GoBackButton top="75" left="24" />
-              <SignupForm
-                errors={errors}
-                handleSignup={handleSubmit(handleSignup)}
-                loading={loading}
-                register={register}
-              />
-              <SignupInfo />
-            </>
-          ) : (
-            <>
-              <GoBackButton top="10" left="75vw" />
-              <SignupInfo />
-              <SignupForm
-                errors={errors}
-                handleSignup={handleSubmit(handleSignup)}
-                loading={loading}
-                register={register}
-              />
-            </>
-          )}
+          <Flex
+            w={["100%", "100%", "90%", "65%"]}
+            justifyContent="center"
+            flexDirection={["column", "column", "row", "row"]}
+          >
+            {isWideVersion ? (
+              <>
+                <GoBackButton top="75" left="24" />
+                <SignupForm
+                  errors={errors}
+                  handleSignup={handleSubmit(handleSignup)}
+                  loading={loading}
+                  register={register}
+                />
+                <SignupInfo />
+              </>
+            ) : (
+              <>
+                <GoBackButton top="10" left="75vw" />
+                <SignupInfo />
+                <SignupForm
+                  errors={errors}
+                  handleSignup={handleSubmit(handleSignup)}
+                  loading={loading}
+                  register={register}
+                />
+              </>
+            )}
+          </Flex>
         </Flex>
-      </Flex>
-    </React.Fragment>
+      </React.Fragment>
+    </MotionContainer>
   );
 };

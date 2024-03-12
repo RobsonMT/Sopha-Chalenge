@@ -62,6 +62,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
   );
 
   const loadTasks = useCallback(async (userId: number, accessToken: string) => {
+    setTasks([]);
     try {
       const response = await api.get(`/tasks?userId=${userId}`, {
         headers: {

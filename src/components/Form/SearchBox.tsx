@@ -25,7 +25,7 @@ export const SearchBox = ({ filterData }: ISearchBoxProps) => {
     event: React.ChangeEvent<HTMLInputElement>,
     slug: string
   ) => {
-    filterData(event.target.value, slug);
+    return filterData(event.target.value, slug);
   };
 
   return (
@@ -70,12 +70,11 @@ export const SearchBox = ({ filterData }: ISearchBoxProps) => {
             >
               {SEARCH.map((item, key) => (
                 <option key={key} value={item.name}>
-                  pesquisar por {item.display}
+                  filtrar por {item.display}
                 </option>
               ))}
             </Select>
             <Center
-              as="button"
               borderRightRadius="6px"
               w="60px"
               h="50px"
@@ -95,7 +94,6 @@ export const SearchBox = ({ filterData }: ISearchBoxProps) => {
               onChange={(e) => searchData(e, slugState)}
             />
             <Center
-              as="button"
               borderRightRadius="6px"
               w="60px"
               h="50px"
