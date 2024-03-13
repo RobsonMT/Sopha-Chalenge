@@ -17,47 +17,47 @@ import { theme } from "../../styles/theme";
 import { Input } from "../Form/Input";
 import * as yup from "yup";
 import { TextArea } from "../Form/TextArea";
-import { ITask, IUpdateTask } from "../../interfaces";
-import { PRIORITY } from "../../constants";
-import { useTask } from "../../contexts/Tasks";
 import { useAuth } from "../../contexts/Auth";
+import { useTask } from "../../contexts/Tasks";
+import { ITask } from "../../interfaces";
+import { PRIORITY } from "../../constants";
 
-interface IModalEditTaskProrps {
+interface IModalCreateTaskProrps {
   isOpen: boolean;
   onClose(): void;
-  task: ITask;
 }
 
-export const ModalEditTask = ({
+const createTaskSchema = yup.object().shape({
+  title: yup.string().required("Campo obrigatório"),
+  description: yup
+    .string()
+    .required("Campo obrigatório")
+    .max(100, "Máximo de 100 caracteres"),
+  completed: yup.boolean().default(false).required("Campo obrigatório"),
+  dueDate: yup.string().required("Campo obrigatório"),
+  priority: yup.string().required("Campo obrigatório"),
+});
+
+export const ModalCreateTask = ({
   isOpen,
   onClose,
-  task,
-}: IModalEditTaskProrps) => {
-  const editTaskSchema = yup.object().shape({
-    title: yup.string().optional(),
-    description: yup.string().max(100, "Máximo de 100 caracteres").optional(),
-    completed: yup.boolean().optional(),
-    dueDate: yup.string().optional(),
-    priority: yup.string().optional(),
-  });
-
+}: IModalCreateTaskProrps) => {
   const {
     formState: { errors },
     register,
     reset,
     handleSubmit,
-  } = useForm<IUpdateTask>({
-    resolver: yupResolver(editTaskSchema),
+  } = useForm<Omit<ITask, "id" | "userId">>({
+    resolver: yupResolver(createTaskSchema),
   });
 
-  const { accessToken } = useAuth();
+  const { user, accessToken } = useAuth();
+  const { createTask } = useTask();
 
-  const { updateTask } = useTask();
+  const handleCreateTask = (data: Omit<ITask, "id" | "userId">) => {
+    const newData = { ...data, userId: user.id };
 
-  const handleUpdateTask = (data: IUpdateTask) => {
-    console.log(data);
-
-    updateTask(task.id, data, accessToken).then(() => {
+    createTask(newData, accessToken).then(() => {
       onClose();
       reset();
     });
@@ -68,7 +68,7 @@ export const ModalEditTask = ({
       <ModalOverlay />
       <ModalContent
         as="form"
-        onSubmit={handleSubmit(handleUpdateTask)}
+        onSubmit={handleSubmit(handleCreateTask)}
         padding="2"
         bg="white"
         color="gray.800"
@@ -78,7 +78,7 @@ export const ModalEditTask = ({
             <FaClipboard color={theme.colors.white} />
           </Center>
           <Text fontWeight="bold" ml="2">
-            Editar Tarefa
+            Adicionar Tarefa
           </Text>
           <Center
             onClick={onClose}
@@ -101,14 +101,12 @@ export const ModalEditTask = ({
               label="Título"
               error={errors.title}
               {...register("title")}
-              defaultValue={task.title}
             />
             <TextArea
               placeholder="Degite a descrição"
               label="Descrição"
               error={errors.description}
               {...register("description")}
-              defaultValue={task.description}
             />
             <Input
               placeholder="Data de vencimento"
@@ -116,7 +114,6 @@ export const ModalEditTask = ({
               label="Data de vencimento"
               error={errors.dueDate}
               {...register("dueDate")}
-              defaultValue={task.dueDate}
             />
             <InputGroup flexDirection="column">
               <FormLabel color="gray.400">Prioridade</FormLabel>
@@ -132,7 +129,6 @@ export const ModalEditTask = ({
                 _placeholder={{ color: "gray.300" }}
                 _focus={{ bg: "gray.100" }}
                 {...register("priority")}
-                defaultValue={task.priority}
               >
                 {PRIORITY.map((item, key) => (
                   <option key={key} value={item.name}>
@@ -153,7 +149,7 @@ export const ModalEditTask = ({
             h="50px"
             _hover={{ bg: "purple.600" }}
           >
-            Editar tarefa
+            Adicionar tarefa
           </Button>
         </ModalFooter>
       </ModalContent>

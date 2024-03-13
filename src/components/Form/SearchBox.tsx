@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { FaFilter, FaSearch } from "react-icons/fa";
 import { theme } from "../../styles/theme";
-import { ModalCreateTask } from "../Modal/CreateTask";
+import { ModalCreateTask } from "../Modal/ModalCreateTask";
 import { Input } from "./Input";
 import { SEARCH } from "../../constants";
 
@@ -70,7 +70,7 @@ export const SearchBox = ({ filterData }: ISearchBoxProps) => {
             >
               {SEARCH.map((item, key) => (
                 <option key={key} value={item.name}>
-                  filtrar por {item.display}
+                  Filtrar por {item.display}
                 </option>
               ))}
             </Select>

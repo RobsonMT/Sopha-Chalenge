@@ -5,7 +5,7 @@ import { useAuth } from "../../contexts/Auth";
 import { useTask } from "../../contexts/Tasks";
 import { theme } from "../../styles/theme";
 import { ITask } from "../../interfaces";
-import { ModalEditTask } from "../Modal/EditTask";
+import { ModalEditTask } from "../Modal/ModalEditTask";
 import React from "react";
 
 interface ICardProps {

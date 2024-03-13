@@ -46,7 +46,7 @@ export const Signin = () => {
     await signIn(data)
       .then(() => {
         setLoading(false);
-        reset;
+        reset();
         history.push("/dashboard");
       })
       .catch(() => {
