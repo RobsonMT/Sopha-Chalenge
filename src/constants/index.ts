@@ -6,6 +6,5 @@ export const PRIORITY = [
 
 export const SEARCH = [
   { id: 1, name: "title", display: "título" },
-  { id: 2, name: "description", display: "descrição" },
-  { id: 3, name: "priority", display: "prioridade" },
+  { id: 2, name: "priority", display: "prioridade" },
 ];

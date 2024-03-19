@@ -29,7 +29,7 @@ export const ModalSuccess = ({
           <FaExclamation color={theme.colors.white} />
         </Center>
         <Text fontWeight="bold" ml="2">
-          Yeesss...
+          Sucesso
         </Text>
         <Center
           onClick={onClose}

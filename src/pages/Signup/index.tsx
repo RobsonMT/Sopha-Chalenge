@@ -80,7 +80,7 @@ export const Signup = () => {
           onClose={onModalSuccessClose}
           onClick={() => history.push("/")}
           buttonMessage="Ir para o login agora"
-          message="Seu cadastro deu super certo, <b>vamos lá</b>"
+          message="Seu cadastro deu certo, <b>vamos lá</b>"
           secondaryText="Você já pode começar criando <b>suas listas</b> de tarefas agora mesmo..."
         />
         <ModalError

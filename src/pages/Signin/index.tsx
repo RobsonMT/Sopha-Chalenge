@@ -62,7 +62,7 @@ export const Signin = () => {
         <ModalError
           isOpen={isModalErrorOpen}
           onClose={onModalErrorClose}
-          error="Dados Inválidos."
+          error="Usuário não encontrado."
           secondaryText="Você pode tentar novamente, <b>clicando</b> no botão acima ou aguarde alguns minutos..."
         />
         <Flex

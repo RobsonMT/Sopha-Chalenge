@@ -7,6 +7,7 @@ import {
 } from "react";
 import { api } from "../../services/api";
 import { ITask, IUpdateTask } from "../../interfaces";
+import { compareByPriority } from "../../utils";
 
 interface ITaskProviderProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface ITaskProviderProps {
 
 interface ITaskContextData {
   tasks: ITask[];
+  setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
   createTask(data: Omit<ITask, "id">, accessToken: string): Promise<void>;
   loadTasks(userId: number, accessToken: string): Promise<void>;
   completeTask(
@@ -53,7 +55,9 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
           },
         });
 
-        setTasks((oldState) => [...oldState, response.data]);
+        setTasks((oldState) =>
+          [...oldState, response.data].sort(compareByPriority)
+        );
       } catch (error) {
         console.log(error);
       }
@@ -62,7 +66,6 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
   );
 
   const loadTasks = useCallback(async (userId: number, accessToken: string) => {
-    setTasks([]);
     try {
       const response = await api.get(`/tasks?userId=${userId}`, {
         headers: {
@@ -70,7 +73,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
         },
       });
 
-      setTasks(response.data);
+      setTasks(response.data.sort(compareByPriority));
     } catch (error) {
       console.log(error);
     }
@@ -96,7 +99,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
 
         if (task) {
           Object.assign(task, data);
-          setTasks([...filteredTasks, task]);
+          setTasks([...filteredTasks, task].sort(compareByPriority));
         }
       } catch (error) {
         console.log(error);
@@ -112,7 +115,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
           `/tasks/${taskId}`,
           {
             completed: true,
-            userId,
+            userId: userId,
           },
           {
             headers: {
@@ -126,7 +129,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
 
         if (task) {
           task.completed = true;
-          setTasks([...filteredTasks, task]);
+          setTasks([...filteredTasks, task].sort(compareByPriority));
         }
       } catch (error) {
         console.log(error);
@@ -157,6 +160,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
     <TaskContext.Provider
       value={{
         tasks,
+        setTasks,
         createTask,
         loadTasks,
         completeTask,

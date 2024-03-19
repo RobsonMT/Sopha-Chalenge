@@ -1,6 +1,7 @@
 import {
   Button,
   Center,
+  FormErrorMessage,
   FormLabel,
   InputGroup,
   Modal,
@@ -136,6 +137,11 @@ export const ModalCreateTask = ({
                   </option>
                 ))}
               </Select>
+              {!!errors.priority && (
+                <FormErrorMessage color="red.500">
+                  {errors.priority?.message}
+                </FormErrorMessage>
+              )}
             </InputGroup>
           </VStack>
         </ModalBody>

@@ -14,7 +14,7 @@ test("Should renders ModalEditTask component", () => {
 
   render(<ModalEditTask task={mockData} isOpen={true} onClose={jest.fn()} />);
 
-  const textAreaElement = screen.findByText("Editar Tarefa");
-  expect(textAreaElement).toBeTruthy();
-  expect(textAreaElement).not.toBeNull();
+  const modalElement = screen.getByText("Editar Tarefa");
+  expect(modalElement).toBeTruthy();
+  expect(modalElement).not.toBeNull();
 });

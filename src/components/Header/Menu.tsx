@@ -4,6 +4,7 @@ import { DrawerBody, Flex, Center } from "@chakra-ui/react";
 import { DrawerOverlay, DrawerHeader } from "@chakra-ui/react";
 import { FiLogOut } from "react-icons/fi";
 import { theme } from "../../styles/theme";
+import { useTask } from "../../contexts/Tasks";
 
 interface IMenuProps {
   isOpen: boolean;
@@ -12,6 +13,12 @@ interface IMenuProps {
 
 export const Menu = ({ isOpen, onClose }: IMenuProps) => {
   const { user, signOut } = useAuth();
+  const { setTasks } = useTask();
+
+  const logout = () => {
+    signOut();
+    setTasks([]);
+  };
 
   return (
     <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
@@ -25,7 +32,7 @@ export const Menu = ({ isOpen, onClose }: IMenuProps) => {
           {user.name}
         </DrawerHeader>
         <DrawerBody>
-          <Flex align="center" onClick={signOut} _hover={{ cursor: "pointer" }}>
+          <Flex align="center" onClick={logout} _hover={{ cursor: "pointer" }}>
             <Center
               w="50px"
               h="50px"
