@@ -19,7 +19,7 @@ interface ITaskContextData {
   createTask(data: Omit<ITask, "id">, accessToken: string): Promise<void>;
   loadTasks(userId: number, accessToken: string): Promise<void>;
   completeTask(
-    taskId: number,
+    taskId: ITask,
     userId: number,
     accessToken: string
   ): Promise<void>;
@@ -55,9 +55,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
           },
         });
 
-        setTasks((oldState) =>
-          [...oldState, response.data].sort(compareByPriority)
-        );
+        setTasks((oldState) => [...oldState, response.data]);
       } catch (error) {
         console.log(error);
       }
@@ -99,7 +97,7 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
 
         if (task) {
           Object.assign(task, data);
-          setTasks([...filteredTasks, task].sort(compareByPriority));
+          setTasks([...filteredTasks, task]);
         }
       } catch (error) {
         console.log(error);
@@ -109,30 +107,25 @@ const TaskProvider = ({ children }: ITaskProviderProps) => {
   );
 
   const completeTask = useCallback(
-    async (taskId: number, userId: number, accessToken: string) => {
-      try {
-        await api.patch(
-          `/tasks/${taskId}`,
-          {
-            completed: true,
-            userId: userId,
+    async (task: ITask, userId: number, accessToken: string) => {
+      await api.patch(
+        `/tasks/${task.id}`,
+        {
+          completed: !task.completed,
+          userId: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        const filteredTasks = tasks.filter((task) => task.id !== taskId);
-        const task = tasks.find((task) => task.id === taskId);
-
-        if (task) {
-          task.completed = true;
-          setTasks([...filteredTasks, task].sort(compareByPriority));
         }
-      } catch (error) {
-        console.log(error);
+      );
+
+      const filteredTasks = tasks.filter((item) => item.id !== task.id);
+
+      if (task) {
+        task.completed = !task.completed;
+        setTasks([...filteredTasks, task]);
       }
     },
     [tasks]

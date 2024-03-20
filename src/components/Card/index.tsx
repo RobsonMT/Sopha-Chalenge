@@ -63,9 +63,9 @@ export const Card = ({ task, index }: ICardProps) => {
                   borderRadius="5px"
                   borderColor="gray.200"
                   bgColor="white"
-                  onClick={() => deleteTask(task.id, accessToken)}
+                  onClick={() => completeTask(task, user.id, accessToken)}
                 >
-                  <FaTrash color={theme.colors.gray[300]} />
+                  <FaCheck color={theme.colors.gray[300]} />
                 </Center>
                 <Center
                   as="button"
@@ -75,9 +75,9 @@ export const Card = ({ task, index }: ICardProps) => {
                   borderRadius="5px"
                   borderColor="gray.200"
                   bgColor="white"
-                  onClick={() => completeTask(task.id, user.id, accessToken)}
+                  onClick={() => deleteTask(task.id, accessToken)}
                 >
-                  <FaCheck color={theme.colors.gray[300]} />
+                  <FaTrash color={theme.colors.gray[300]} />
                 </Center>
               </HStack>
             </Flex>
